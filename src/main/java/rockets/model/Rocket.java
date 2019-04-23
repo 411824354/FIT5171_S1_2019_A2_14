@@ -59,6 +59,7 @@ public class Rocket extends Entity {
     }
 
     public void setMassToLEO(String massToLEO) {
+        notNull(massToLEO);
         this.massToLEO = massToLEO;
     }
 

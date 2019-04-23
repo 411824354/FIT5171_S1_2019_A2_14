@@ -26,6 +26,7 @@ public class User extends Entity {
     }
 
     public void setLastName(String lastName) {
+
         this.lastName = lastName;
     }
 
@@ -43,6 +44,7 @@ public class User extends Entity {
     }
 
     public void setPassword(String password) {
+        notBlank(email, "password cannot be null or empty");
         this.password = password;
     }
 
