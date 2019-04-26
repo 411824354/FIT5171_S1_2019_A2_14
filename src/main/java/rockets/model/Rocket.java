@@ -1,7 +1,9 @@
 package rockets.model;
 
+import java.lang.reflect.Array;
 import java.util.Objects;
 
+import static org.apache.commons.lang3.Validate.notBlank;
 import static org.apache.commons.lang3.Validate.notNull;
 
 public class Rocket extends Entity {
@@ -9,7 +11,7 @@ public class Rocket extends Entity {
 
     private String country;
 
-    private LaunchServiceProvider manufacturer;
+    private String manufacturer;
 
     private String massToLEO;
 
@@ -24,10 +26,13 @@ public class Rocket extends Entity {
      * @param country
      * @param manufacturer
      */
-    public Rocket(String name, String country, LaunchServiceProvider manufacturer) {
+    public Rocket(String name, String country, String manufacturer) {
+
         notNull(name);
         notNull(country);
         notNull(manufacturer);
+
+
 
         this.name = name;
         this.country = country;
@@ -42,7 +47,7 @@ public class Rocket extends Entity {
         return country;
     }
 
-    public LaunchServiceProvider getManufacturer() {
+    public String getManufacturer() {
         return manufacturer;
     }
 
@@ -58,17 +63,46 @@ public class Rocket extends Entity {
         return massToOther;
     }
 
-    public void setMassToLEO(String massToLEO) {
-        notNull(massToLEO);
-        this.massToLEO = massToLEO;
+    public boolean isNumber(String str) {
+        String regex = "^[0-9]+$";
+        return str.matches(regex);
     }
 
-    public void setMassToGTO(String massToGTO) {
-        this.massToGTO = massToGTO;
+    public void setMassToLEO(String massToLEO) throws Exception {
+
+        notBlank(massToLEO, "massToLEO cannot be null or empty");
+        massToLEO = massToLEO.replace(" ","");
+        if (isNumber(massToLEO)){
+            this.massToLEO = massToLEO;
+        }
+        else {
+
+            throw new Exception("massToLEO should only be digit");
+        }
+
     }
 
-    public void setMassToOther(String massToOther) {
-        this.massToOther = massToOther;
+    public void setMassToGTO(String massToGTO) throws Exception {
+        notBlank(massToGTO, "massToGTO cannot be null or empty");
+        massToGTO = massToGTO.replace(" ","");
+        if (isNumber(massToGTO)) {
+            this.massToGTO = massToGTO;
+        } else {
+
+            throw new Exception("massToGTO should only be digit");
+        }
+    }
+
+    public void setMassToOther (String massToOther) throws Exception {
+        notBlank(massToOther,"massToOther cannot be null or empty");
+        massToOther = massToOther.replace(" ","");
+        if (isNumber(massToOther)){
+            this.massToOther = massToOther;
+        }
+        else{
+            throw new Exception("massToOther should only be digit");
+        }
+
     }
 
     @Override
