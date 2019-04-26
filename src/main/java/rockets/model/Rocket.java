@@ -1,10 +1,13 @@
 package rockets.model;
 
+
+
 import java.util.Objects;
 
 import static jdk.nashorn.internal.runtime.JSType.isNumber;
+import static org.apache.commons.lang3.Validate.notBlank;
 import static org.apache.commons.lang3.Validate.notNull;
-import static org.junit.platform.commons.util.Preconditions.notBlank;
+
 
 public class Rocket extends Entity {
     private String name;
@@ -72,16 +75,20 @@ public class Rocket extends Entity {
         }    }
 
     public void setMassToGTO(String massToGTO) throws Exception{
+        notNull(massToGTO,"massToGTO cannot be null or empty");
         notBlank(massToGTO, "massToGTO cannot be null or empty");
+
         massToGTO = massToGTO.replace(" ","");
         if (isNumber(massToGTO)) {
             this.massToGTO = massToGTO;
         } else {
 
             throw new Exception("massToGTO should only be digit");
-        }    }
+        }
+    }
 
     public void setMassToOther (String massToOther) throws Exception {
+        notNull(massToOther,"massToOther cannot be null or empty");
         notBlank(massToOther,"massToOther cannot be null or empty");
         massToOther = massToOther.replace(" ","");
         if (isNumber(massToOther)){
