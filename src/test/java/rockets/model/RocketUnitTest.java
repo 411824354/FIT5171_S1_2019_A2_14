@@ -39,7 +39,7 @@ public class RocketUnitTest {
 
     @DisplayName("should set rocket massToLEO value")
     @ValueSource(strings = {"10000", "15000"})
-    public void shouldSetMassToLEOWhenGivenCorrectValue(String massToLEO) {
+    public void shouldSetMassToLEOWhenGivenCorrectValue(String massToLEO) throws Exception {
         String name = "BFR";
         String country = "USA";
         LaunchServiceProvider manufacturer = new LaunchServiceProvider("SpaceX", 2002, "USA");

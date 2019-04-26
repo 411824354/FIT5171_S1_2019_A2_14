@@ -12,10 +12,10 @@ public class RocketFamily extends Entity {
     private String develop_OR;
     private ArrayList<Rocket> rocketList;
 
-    public Rocket newRocket(String name, String manufacture){
-        Rocket rocket = new Rocket (name,getCountry (),manufacture);
-        return rocket;
-    }
+    //public Rocket newRocket(String name, String manufacture){
+    //    Rocket rocket = new Rocket (name,getCountry (),manufacture);
+    //    return rocket;
+    //}
     public void addRocket(Rocket rocket) {
         notNull (rocket,"The input rocket can not be null");
         this.rocketList.add (rocket);
