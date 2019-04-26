@@ -1,17 +1,17 @@
 package rockets.model;
 
-import java.lang.reflect.Array;
 import java.util.Objects;
 
-import static org.apache.commons.lang3.Validate.notBlank;
+import static jdk.nashorn.internal.runtime.JSType.isNumber;
 import static org.apache.commons.lang3.Validate.notNull;
+import static org.junit.platform.commons.util.Preconditions.notBlank;
 
 public class Rocket extends Entity {
     private String name;
 
     private String country;
 
-    private String manufacturer;
+    private LaunchServiceProvider manufacturer;
 
     private String massToLEO;
 
@@ -26,13 +26,10 @@ public class Rocket extends Entity {
      * @param country
      * @param manufacturer
      */
-    public Rocket(String name, String country, String manufacturer) {
-
+    public Rocket(String name, String country, LaunchServiceProvider manufacturer) {
         notNull(name);
         notNull(country);
         notNull(manufacturer);
-
-
 
         this.name = name;
         this.country = country;
@@ -47,7 +44,7 @@ public class Rocket extends Entity {
         return country;
     }
 
-    public String getManufacturer() {
+    public LaunchServiceProvider getManufacturer() {
         return manufacturer;
     }
 
@@ -63,13 +60,7 @@ public class Rocket extends Entity {
         return massToOther;
     }
 
-    public boolean isNumber(String str) {
-        String regex = "^[0-9]+$";
-        return str.matches(regex);
-    }
-
-    public void setMassToLEO(String massToLEO) throws Exception {
-
+    public void setMassToLEO(String massToLEO) throws Exception{
         notBlank(massToLEO, "massToLEO cannot be null or empty");
         massToLEO = massToLEO.replace(" ","");
         if (isNumber(massToLEO)){
@@ -78,11 +69,9 @@ public class Rocket extends Entity {
         else {
 
             throw new Exception("massToLEO should only be digit");
-        }
+        }    }
 
-    }
-
-    public void setMassToGTO(String massToGTO) throws Exception {
+    public void setMassToGTO(String massToGTO) throws Exception{
         notBlank(massToGTO, "massToGTO cannot be null or empty");
         massToGTO = massToGTO.replace(" ","");
         if (isNumber(massToGTO)) {
@@ -90,8 +79,7 @@ public class Rocket extends Entity {
         } else {
 
             throw new Exception("massToGTO should only be digit");
-        }
-    }
+        }    }
 
     public void setMassToOther (String massToOther) throws Exception {
         notBlank(massToOther,"massToOther cannot be null or empty");
