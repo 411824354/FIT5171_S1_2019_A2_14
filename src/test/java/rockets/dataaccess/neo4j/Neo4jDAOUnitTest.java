@@ -9,10 +9,7 @@ import org.neo4j.ogm.drivers.embedded.driver.EmbeddedDriver;
 import org.neo4j.ogm.session.Session;
 import org.neo4j.ogm.session.SessionFactory;
 import rockets.dataaccess.DAO;
-import rockets.model.Launch;
-import rockets.model.LaunchServiceProvider;
-import rockets.model.Rocket;
-import rockets.model.User;
+import rockets.model.*;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -165,6 +162,67 @@ public class Neo4jDAOUnitTest {
         dao.delete(rocket);
         assertTrue(dao.loadAll(Rocket.class).isEmpty());
         assertFalse(dao.loadAll(LaunchServiceProvider.class).isEmpty());
+    }
+
+    @Test
+    public void shouldCreateALaunchServiceProviderSuccessfully() {
+        LaunchServiceProvider launchServiceProvider = new LaunchServiceProvider();
+        launchServiceProvider.setName("SpaceX");
+        launchServiceProvider.setCountry("USA");
+        launchServiceProvider.setYearFounded(2002);
+        dao.createOrUpdate(launchServiceProvider);
+
+        Collection<LaunchServiceProvider> launchServiceProviders = dao.loadAll(LaunchServiceProvider.class);
+        assertFalse(launchServiceProviders.isEmpty());
+        assertTrue(launchServiceProviders.contains(launchServiceProvider));
+    }
+
+    @Test
+    public void shouldUpdateLaunchServiceProviderAttributesSuccessfully() {
+        LaunchServiceProvider launchServiceProvider = new LaunchServiceProvider();
+        launchServiceProvider.setName("SpaceX");
+        launchServiceProvider.setCountry("USA");
+        launchServiceProvider.setYearFounded(2002);
+        dao.createOrUpdate(launchServiceProvider);
+
+        Collection<LaunchServiceProvider> lsp = dao.loadAll(LaunchServiceProvider.class);
+
+        LaunchServiceProvider loadedLSP = lsp.iterator().next();
+        assertNull(loadedLSP.getHeadquarters());
+
+        launchServiceProvider.setHeadquarters("experimental");
+        dao.createOrUpdate(launchServiceProvider);
+        lsp = dao.loadAll(LaunchServiceProvider.class);
+        assertEquals(1, lsp.size());
+        loadedLSP = lsp.iterator().next();
+        assertEquals("experimental", loadedLSP.getHeadquarters());
+    }
+
+    @Test
+    public void shouldCreateARocketFamilySuccessfully() {
+        RocketFamily rocketFamily = new RocketFamily("Falcon9", "USA", "SpaceX");
+        dao.createOrUpdate(rocketFamily);
+        Collection<RocketFamily> rocketFamilys = dao.loadAll(RocketFamily.class);
+        assertFalse(rocketFamilys.isEmpty());
+        assertTrue(rocketFamilys.contains(rocketFamily));
+    }
+
+    @Test
+    public void shouldDeleteRocketFamilySuccessfully(){
+        RocketFamily rocketFamily = new RocketFamily("Falcon9", "USA", "SpaceX");
+        dao.createOrUpdate(rocketFamily);
+        dao.delete(rocketFamily);
+        assertTrue(dao.loadAll(RocketFamily.class).isEmpty());
+        assertTrue(dao.loadAll(Rocket.class).isEmpty());
+    }
+
+    @Test
+    public void shouldCreateAPayLoadSuccessfully() {
+        Payload payload = new Payload("name", "type");
+        dao.createOrUpdate(payload);
+        Collection<Payload> payloads = dao.loadAll(Payload.class);
+        assertFalse(payloads.isEmpty());
+        assertTrue(payloads.contains(payload));
     }
 
     @AfterEach
