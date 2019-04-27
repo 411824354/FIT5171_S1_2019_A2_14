@@ -211,6 +211,7 @@ public class Neo4jDAOUnitTest {
     public void shouldDeleteRocketFamilySuccessfully(){
         RocketFamily rocketFamily = new RocketFamily("Falcon9", "USA", "SpaceX");
         dao.createOrUpdate(rocketFamily);
+        assertFalse(dao.loadAll(RocketFamily.class).isEmpty());
         dao.delete(rocketFamily);
         assertTrue(dao.loadAll(RocketFamily.class).isEmpty());
         assertTrue(dao.loadAll(Rocket.class).isEmpty());
