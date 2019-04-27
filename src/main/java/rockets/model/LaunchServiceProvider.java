@@ -60,7 +60,7 @@ public class LaunchServiceProvider extends Entity {
     public void setYearFounded(int yearFounded) {
         if (yearFounded <= 0)
             throw new IllegalArgumentException("Zero or negative input");
-        if (yearFounded <= 1800 || yearFounded >= 2020)
+        if (yearFounded <= 1900 || yearFounded >= 2020)
             throw new IllegalArgumentException("Not in range input");
         this.yearFounded = yearFounded;
     }
