@@ -26,7 +26,7 @@ public class User extends Entity {
     }
 
     public void setLastName(String lastName) {
-
+        notBlank(lastName,"the last name cannot be null or empty");
         this.lastName = lastName;
     }
 
@@ -36,7 +36,20 @@ public class User extends Entity {
 
     public void setEmail(String email) {
         notBlank(email, "email cannot be null or empty");
-        this.email = email;
+        if (!emailFormat(email)){
+            throw new IllegalArgumentException("incorrect email format e.g:asdf@gmail.com");
+        }
+        else {
+            this.email = email;
+        }
+    }
+
+    public static boolean emailFormat(String email) {
+        boolean tag = true;
+        if (!email.matches("[\\w\\.\\-]+@([\\w\\-]+\\.)+[\\w\\-]+")) {
+            tag = false;
+        }
+        return tag;
     }
 
     public String getPassword() {
@@ -52,6 +65,8 @@ public class User extends Entity {
     public boolean isPasswordMatch(String password) {
         return this.password.equals(password.trim());
     }
+
+
 
     @Override
     public boolean equals(Object o) {

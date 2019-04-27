@@ -58,4 +58,21 @@ public class UserUnitTest {
         anotherUser.setEmail("def@example.com");
         assertFalse(target.equals(anotherUser));
     }
+
+    @DisplayName("a user need to have a non-empty last name")
+    @ParameterizedTest
+    @ValueSource(strings = {"", "   "})
+    public void shouldNotEmptyLastName(String lastName){
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> target.setLastName(lastName));
+        assertEquals("the last name cannot be null or empty",exception.getMessage());
+    }
+
+    @DisplayName("email should in correct format")
+    @ParameterizedTest
+    @ValueSource(strings = {"sdfsf","abc@123","aabbcc@gmialcome"})
+    public void emailShouldInCorrectFormat(String email){
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> target.setEmail(email));
+        assertEquals("incorrect email format e.g:asdf@gmail.com",exception.getMessage());
+    }
+
 }
