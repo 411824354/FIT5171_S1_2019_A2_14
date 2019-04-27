@@ -8,9 +8,7 @@ import rockets.model.LaunchServiceProvider;
 import rockets.model.Rocket;
 
 import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class RocketMiner {
@@ -30,7 +28,28 @@ public class RocketMiner {
      * @return the list of k most active rockets.
      */
     public List<Rocket> mostLaunchedRockets(int k) {
-        return null;
+        logger.info("find most launched" + k + "rockets");
+        Collection<Launch> launches = dao.loadAll(Launch.class);
+        ArrayList<Rocket> rockets = new ArrayList<>();
+        for (Launch launch : launches) {
+            rockets.add(launch.getLaunchVehicle());
+        }
+        Map<Rocket,Integer> rocketMap = new HashMap<>();
+        for (Rocket rocket: rockets) {
+            if (rocketMap.containsKey(rocket)) {
+                int count = rocketMap.get(rocket) + 1;
+                rocketMap.replace(rocket,count);
+            }
+            else
+                rocketMap.put(rocket,1);
+        }
+        ArrayList<Rocket> rockets1 = new ArrayList<>();
+        Set<Map.Entry<Rocket,Integer>> rocketMap2 =
+                rocketMap.entrySet().stream().sorted(Map.Entry.<Rocket,Integer>comparingByValue().reversed()).limit(k).collect(Collectors.toSet());
+        for (Map.Entry<Rocket,Integer> map : rocketMap2) {
+            rockets1.add(map.getKey());
+        }
+        return rockets1;
     }
 
     /**
