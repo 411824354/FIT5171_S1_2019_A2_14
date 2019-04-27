@@ -188,7 +188,7 @@ public class RocketMinerUnitTest {
             launch.setLaunchVehicle(rocketList.get(rocketIndex[k]));
             launchList.add(launch);
         }
-        when(dao.loadAll(Launch.class)).thenReturn(launches);
+        when(dao.loadAll(Launch.class)).thenReturn(launchList);
         String realCountry = "CHINA";
         String testCountry = miner.dominantCountry("LEO");
         assertEquals(realCountry,testCountry);
