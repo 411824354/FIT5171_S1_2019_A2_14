@@ -74,6 +74,30 @@ public class LaunchServiceProviderUnitTest {
         assertThrows(IllegalArgumentException.class, () -> target.setHeadquarters(arg));
     }
 
+    @DisplayName("should return correct name when set name with space in front or behind")
+    @ParameterizedTest
+    @ValueSource(strings = {"  jack frost", "jack frost  ", " jack frost "})
+    public void shouldReturnCorrectNameWhenSetNameWithSpaceInFrontOrBehind(String arg) {
+        this.target.setName(arg);
+        assertEquals("jack frost", this.target.getName());
+    }
+
+    @DisplayName("should return correct name when set name with space in front or behind")
+    @ParameterizedTest
+    @ValueSource(strings = {"  south korea", "south korea  ", " south korea "})
+    public void shouldReturnCorrectNameWhenSetCountryWithSpaceInFrontOrBehind(String arg) {
+        this.target.setCountry(arg);
+        assertEquals("south korea", this.target.getCountry());
+    }
+
+    @DisplayName("should return correct name when set name with space in front or behind")
+    @ParameterizedTest
+    @ValueSource(strings = {"  spaceX", "spaceX  ", " spaceX "})
+    public void shouldReturnCorrectNameWhenSetHeadquatersWithSpaceInFrontOrBehind(String arg) {
+        this.target.setHeadquarters(arg);
+        assertEquals("spaceX", this.target.getHeadquarters());
+    }
+
     @DisplayName("should return true when two launch service provider have same name yearFounded country")
     @Test
     public void shouldReturnTrueWhenProvidersHaveSameNameYearFoundedCountry() {

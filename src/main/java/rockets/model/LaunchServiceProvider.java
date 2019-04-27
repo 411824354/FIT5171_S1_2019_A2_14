@@ -54,7 +54,7 @@ public class LaunchServiceProvider extends Entity {
             throw new IllegalArgumentException("Null input");
         if (name.trim().isEmpty())
             throw new IllegalArgumentException("Empty input");
-        this.name = name;
+        this.name = name.trim();
     }
 
     public void setYearFounded(int yearFounded) {
@@ -70,7 +70,7 @@ public class LaunchServiceProvider extends Entity {
             throw new IllegalArgumentException("Null input");
         if (country.trim().isEmpty())
             throw new IllegalArgumentException("Empty input");
-        this.country = country;
+        this.country = country.trim();
     }
 
     public void setHeadquarters(String headquarters) {
@@ -78,7 +78,7 @@ public class LaunchServiceProvider extends Entity {
             throw new IllegalArgumentException("Null input");
         if (headquarters.trim().isEmpty())
             throw new IllegalArgumentException("Empty input");
-        this.headquarters = headquarters;
+        this.headquarters = headquarters.trim();
     }
 
     public void setRockets(Set<Rocket> rockets) {
