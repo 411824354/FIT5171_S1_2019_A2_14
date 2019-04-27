@@ -9,6 +9,7 @@ import rockets.model.Rocket;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -147,7 +148,28 @@ public class RocketMiner {
      * @param orbit the orbit
      * @return the country who sends the most payload to the orbit
      */
-    public String dominantCountry(String orbit) { return null;}
+    public String dominantCountry(String orbit) {
+        logger.info("find dominant country");
+        Collection<Launch> launches = dao.loadAll(Launch.class);
+        Map<String,Integer> stringIntegerMap = new HashMap<>();
+        for (Launch launch : launches)
+        {
+            if (launch.getOrbit().equals(orbit))
+            {
+                if (stringIntegerMap.containsKey(launch.getLaunchVehicle().getCountry()))
+                {
+                    int count = stringIntegerMap.get(launch.getLaunchVehicle().getCountry()) + launch.getPayload().size();
+                    stringIntegerMap.replace(launch.getLaunchVehicle().getCountry(),count);
+                }
+                else
+                    stringIntegerMap.put(launch.getLaunchVehicle().getCountry(),1);
+            }
+        }
+        List<Map.Entry<String,Integer>> entryList = new ArrayList<>(stringIntegerMap.entrySet());
+        List<Map.Entry<String,Integer>> entryList1 = entryList.stream().sorted((a,b)->-a.getValue()-b.getValue()).limit(1).collect(Collectors.toList());
+        String country = entryList1.get(0).getKey();
+        return country;
+    }
 
     /**
      * TODO: to be implemented & tested!
@@ -158,7 +180,11 @@ public class RocketMiner {
      * @return the list of k most expensive launches.
      */
     public List<Launch> mostExpensiveLaunches(int k) {
-        return null;
+        logger.info("find most Expensive " + k + "Launches");
+        Collection<Launch> launches = dao.loadAll(Launch.class);
+        Comparator<Launch> launchComparator = (a,b) -> -a.getPrice().compareTo(b.getPrice());
+        List<Launch> launchList = launches.stream().sorted(launchComparator).limit(k).collect(Collectors.toList());
+        return launchList;
     }
 
     /**
@@ -172,6 +198,32 @@ public class RocketMiner {
      * @return the list of k launch service providers who has the highest sales revenue.
      */
     public List<LaunchServiceProvider> highestRevenueLaunchServiceProviders(int k, int year) {
-        return null;
+        logger.info("find highest Revenue " + k + " launch service providers");
+        Collection<Launch> launches = dao.loadAll(Launch.class);
+        List<LaunchServiceProvider> launchServiceProviderList = new ArrayList<>();
+        Map<LaunchServiceProvider,Integer> launchServiceProviderIntegerMap = new HashMap<>();
+        for (Launch launch : launches)
+        {
+            LocalDate date = launch.getLaunchDate();
+            if (year == date.getYear())
+            {
+                if (launchServiceProviderIntegerMap.containsKey(launch.getLaunchVehicle().getManufacturer()))
+                {
+                    int count = launchServiceProviderIntegerMap.get(launch.getLaunchVehicle().getManufacturer()) + 1;
+                    launchServiceProviderIntegerMap.replace(launch.getLaunchVehicle().getManufacturer(),count);
+                }
+                else
+                {
+                    launchServiceProviderIntegerMap.put(launch.getLaunchVehicle().getManufacturer(),1);
+                }
+            }
+        }
+        List<Map.Entry<LaunchServiceProvider,Integer>> entryList = new ArrayList<>(launchServiceProviderIntegerMap.entrySet());
+        List<Map.Entry<LaunchServiceProvider,Integer>> entryList1 = entryList.stream().sorted((a,b) -> -a.getValue() - b.getValue()).limit(k).collect(Collectors.toList());
+        for (Map.Entry<LaunchServiceProvider,Integer> map : entryList1)
+        {
+            launchServiceProviderList.add(map.getKey());
+        }
+        return launchServiceProviderList;
     }
 }
