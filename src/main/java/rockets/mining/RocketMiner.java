@@ -8,6 +8,7 @@ import rockets.model.LaunchServiceProvider;
 import rockets.model.Rocket;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -62,7 +63,66 @@ public class RocketMiner {
      * @return the list of k most reliable ones.
      */
     public List<LaunchServiceProvider> mostReliableLaunchServiceProviders(int k) {
-        return null;
+        logger.info("find most reliable " + k + " launch services providers");
+        Collection<Launch> launches = dao.loadAll(Launch.class);
+        List<Launch> launches1 = launches.stream().collect(Collectors.toList());
+        ArrayList<LaunchServiceProvider> launchServiceProviders = new ArrayList<>();
+        Map<LaunchServiceProvider,Double> launchServiceProviderDoubleMap = new HashMap<>();
+        for (int i = 0; i < launches1.size(); i++)
+        {
+            double success = 0;
+            double failed = 0;
+            double reliable = 0;
+            if (launches1.get(i).getLaunchOutcome().equals(Launch.LaunchOutcome.SUCCESSFUL))
+                success = 1;
+            else if (launches1.get(i).getLaunchOutcome().equals(Launch.LaunchOutcome.FAILED))
+                failed = 0;
+            LaunchServiceProvider launchServiceProvider = launches1.get(i).getLaunchServiceProvider();
+            int j = i + 1;
+            while (j < launches1.size())
+            {
+
+                LaunchServiceProvider launchServiceProvider1 = launches1.get(i).getLaunchServiceProvider();
+                LaunchServiceProvider launchServiceProvider2 = launches1.get(j).getLaunchServiceProvider();
+
+                if (launchServiceProvider1.equals(launchServiceProvider2))
+                {
+                    if (launches1.get(j).getLaunchOutcome().equals(Launch.LaunchOutcome.SUCCESSFUL))
+                    {
+                        success = success + 1;
+                    }
+                    else if (launches1.get(j).getLaunchOutcome().equals(Launch.LaunchOutcome.FAILED))
+                    {
+                        failed = failed + 1;
+                    }
+                    launches1.remove(j);
+                }
+                else
+                    j ++;
+            }
+            DecimalFormat df = new DecimalFormat("#.##");
+            Double reliable1 = success / (success + failed);
+            reliable = Double.parseDouble(df.format(reliable1));
+            launchServiceProviderDoubleMap.put(launchServiceProvider,reliable);
+        }
+        Comparator<Map.Entry<LaunchServiceProvider,Double>> entryComparator = new Comparator<Map.Entry<LaunchServiceProvider, Double>>() {
+            @Override
+            public int compare(Map.Entry<LaunchServiceProvider, Double> o1, Map.Entry<LaunchServiceProvider, Double> o2) {
+                if ((o2.getValue() - o1.getValue())>0)
+                    return 1;
+                else if((o2.getValue() - o1.getValue())==0)
+                    return 0;
+                else
+                    return -1;
+            }
+        };
+        List<Map.Entry<LaunchServiceProvider, Double>> entryList = new ArrayList<Map.Entry<LaunchServiceProvider, Double>>(launchServiceProviderDoubleMap.entrySet());
+        List<Map.Entry<LaunchServiceProvider,Double>> entryList1 = entryList.stream().sorted(entryComparator).limit(k).collect(Collectors.toList());
+        for (Map.Entry<LaunchServiceProvider,Double> lsp : entryList1)
+        {
+            launchServiceProviders.add(lsp.getKey());
+        }
+        return launchServiceProviders;
     }
 
     /**

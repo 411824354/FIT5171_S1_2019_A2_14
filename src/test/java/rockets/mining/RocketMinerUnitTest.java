@@ -89,4 +89,30 @@ public class RocketMinerUnitTest {
         assertEquals(k,launchedRockets.size());
         assertEquals(rocketList.subList(0,k),launchedRockets);
     }
+
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2, 3})
+    public void shouldReturnMostReliableLaunchServiceProviders(int k){
+        List<Launch> launches1 = Lists.newArrayList();
+
+        int[] outComes = new int[]{1,1,1,0,1,1,0,1,0,0};
+        int[] lspIndex = new int[]{0,0,0,0,1,1,1,2,2,2};
+        for (int i = 0;i < launches.size();i ++)
+        {
+            Launch.LaunchOutcome outCome = null;
+            if (outComes[i] == 1)
+                outCome = Launch.LaunchOutcome.SUCCESSFUL;
+            else
+                outCome = Launch.LaunchOutcome.FAILED;
+            Launch launch = launches.get(i);
+            launch.setLaunchOutcome(outCome);
+            launch.setLaunchServiceProvider(lsps.get(lspIndex[i]));
+            launches1.add(launch);
+        }
+        when(dao.loadAll(Launch.class)).thenReturn(launches1);
+        List<LaunchServiceProvider> launchServiceProviders1 = new ArrayList<>(lsps);
+        List<LaunchServiceProvider> launchServiceProviders = miner.mostReliableLaunchServiceProviders(k);
+        assertEquals(k,launchServiceProviders.size());
+        assertEquals(launchServiceProviders1.subList(0,k),launchServiceProviders);
+    }
 }
