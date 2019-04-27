@@ -165,6 +165,21 @@ public class Neo4jDAOUnitTest {
     }
 
     @Test
+    public void shouldDeleteLaunchWithoutDeleteLSP() {
+        Launch launch = new Launch();
+        launch.setLaunchDate(LocalDate.of(2017, 1, 1));
+        launch.setLaunchVehicle(rocket);
+        launch.setLaunchServiceProvider(spacex);
+        launch.setOrbit("LEO");
+        dao.createOrUpdate(launch);
+        assertFalse(dao.loadAll(Launch.class).isEmpty());
+        assertFalse(dao.loadAll(LaunchServiceProvider.class).isEmpty());
+        dao.delete(launch);
+        assertTrue(dao.loadAll(Launch.class).isEmpty());
+        assertFalse(dao.loadAll(LaunchServiceProvider.class).isEmpty());
+    }
+
+    @Test
     public void shouldCreateALaunchServiceProviderSuccessfully() {
         LaunchServiceProvider launchServiceProvider = new LaunchServiceProvider();
         launchServiceProvider.setName("SpaceX");
@@ -214,7 +229,6 @@ public class Neo4jDAOUnitTest {
         assertFalse(dao.loadAll(RocketFamily.class).isEmpty());
         dao.delete(rocketFamily);
         assertTrue(dao.loadAll(RocketFamily.class).isEmpty());
-        assertTrue(dao.loadAll(Rocket.class).isEmpty());
     }
 
     @Test
