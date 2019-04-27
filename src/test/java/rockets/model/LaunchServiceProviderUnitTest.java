@@ -51,7 +51,7 @@ public class LaunchServiceProviderUnitTest {
 
     @DisplayName("should throw exception when setYearFounded given out of range input")
     @ParameterizedTest
-    @ValueSource(ints = {1700, 2500, 150, 1800, 2020})
+    @ValueSource(ints = {1899, 2021, 1890, 2030})
     public void shouldThrowIllegalArgumentExceptionWhenSetYearFoundedGivenOutOfRangeInput(int arg) {
         assertThrows(IllegalArgumentException.class, ()-> target.setYearFounded(arg));
     }
