@@ -84,6 +84,10 @@ public class LaunchServiceProvider extends Entity {
     public void setRockets(Set<Rocket> rockets) {
         if (rockets == null)
             throw new NullPointerException("Null input");
+        for (Rocket rocket : rockets) {
+            if (rocket == null)
+                throw new IllegalArgumentException("Rockets cannot contain null object");
+        }
         this.rockets = rockets;
     }
 

@@ -6,6 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class LaunchServiceProviderUnitTest {
@@ -96,6 +99,15 @@ public class LaunchServiceProviderUnitTest {
     public void shouldReturnCorrectNameWhenSetHeadquatersWithSpaceInFrontOrBehind(String arg) {
         this.target.setHeadquarters(arg);
         assertEquals("spaceX", this.target.getHeadquarters());
+    }
+
+    @DisplayName("should throw exception when passed rocket has null object")
+    @Test
+    public void shouldThrowExceptionWhenPassedPayloadsIncludeNull(){
+        Set<Rocket> rockets = new HashSet<Rocket>();
+        rockets.add(null);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> target.setRockets(rockets));
+        assertEquals("Rockets cannot contain null object",exception.getMessage());
     }
 
     @DisplayName("should return true when two launch service provider have same name yearFounded country")
