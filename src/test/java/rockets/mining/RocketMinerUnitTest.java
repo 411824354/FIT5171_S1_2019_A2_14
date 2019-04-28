@@ -108,7 +108,7 @@ public class RocketMinerUnitTest {
 
 
     @ParameterizedTest
-    @ValueSource(ints = {1, 2, 3})
+    @ValueSource(ints = {1, 2, 3, 9})
     public void shouldReturnTopMostRecentLaunches(int k) {
         when(dao.loadAll(Launch.class)).thenReturn(launches);
         List<Launch> sortedLaunches = new ArrayList<>(launches);
@@ -188,7 +188,7 @@ public class RocketMinerUnitTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {4,10,1,2,3})
+    @ValueSource(ints = {5,10,2,3,4})
     public void shouldThrowExceptionWHenNothingLoadInMostLaunchedRockets(int k)
     {
         when(dao.loadAll(Launch.class)).thenReturn(null);
@@ -207,7 +207,7 @@ public class RocketMinerUnitTest {
 
 
     @ParameterizedTest
-    @ValueSource(ints = {11,15,5,9,10})
+    @ValueSource(ints = {4,10,1,2,3})
     public void shouldThrowExceptionWHenNothingLoadInMostReliableLaunchServiceProvider(int k)
     {
         when(dao.loadAll(Launch.class)).thenReturn(null);
