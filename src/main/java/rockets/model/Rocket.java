@@ -72,6 +72,26 @@ public class Rocket extends Entity {
         return true;
     }
 
+    public void setName(String name){
+        notNull(name,"the name should not empty or null");
+        notBlank(name,"the name should not empty or null");
+        name = name.trim();
+        if (name.length() < 40){
+            this.name = name;
+        }
+        else
+        {
+            throw new IllegalArgumentException("the name should less than 40 letters");
+        }
+    }
+
+    public void setCountry(String country){
+
+        notNull(country,"the country should not be null or empty");
+        notBlank(country,"the country should not be null or empty");
+        this.country = country;
+    }
+
     public void setMassToLEO(String massToLEO) throws Exception{
         notBlank(massToLEO, "massToLEO cannot be null or empty");
         massToLEO = massToLEO.replace(" ","");

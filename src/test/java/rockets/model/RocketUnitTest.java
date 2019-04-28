@@ -176,6 +176,33 @@ public class RocketUnitTest {
         assertEquals("1234",target.getMassToOther());
     }
 
+    @DisplayName("should not accept empty value to the name")
+    @ParameterizedTest
+    @ValueSource(strings = {"   ",""})
+    public void shouldThrowExceptionWhenInputEmptyValueToName(String name) {
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> target.setName(name));
+        assertEquals("the name should not empty or null",e.getMessage());
+    }
 
+    @DisplayName("should not accept null value to the name")
+    @Test
+    public void testNullToSetName(){
+        NullPointerException e = assertThrows(NullPointerException.class, () ->target.setName(null));
+        assertEquals("the name should not empty or null",e.getMessage());
+    }
 
+    @DisplayName("should not accept empty value to the country")
+    @ParameterizedTest
+    @ValueSource(strings = {"   ",""})
+    public void shouldThrowExceptionWhenInputEmptyValueToCountry(String country) {
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> target.setCountry(country));
+        assertEquals("the country should not be null or empty", e.getMessage());
+    }
+
+    @DisplayName("should not accept null value to the country")
+    @Test
+    public void testNullToSetCountry(){
+        NullPointerException e = assertThrows(NullPointerException.class, () ->target.setCountry(null));
+        assertEquals("the country should not be null or empty",e.getMessage());
+    }
 }
