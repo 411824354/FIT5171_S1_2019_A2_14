@@ -13,6 +13,8 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.apache.commons.lang3.Validate.notBlank;
+
 public class RocketMiner {
     private static Logger logger = LoggerFactory.getLogger(RocketMiner.class);
 
@@ -161,8 +163,11 @@ public class RocketMiner {
      * @return the country who sends the most payload to the orbit
      */
     public String dominantCountry(String orbit) {
+        notBlank(orbit, "orbit cannot be null or empty");
         logger.info("find dominant country");
         Collection<Launch> launches = dao.loadAll(Launch.class);
+        if (launches == null)
+            throw new NullPointerException("no launches in database");
         Map<String,Integer> stringIntegerMap = new HashMap<>();
         for (Launch launch : launches)
         {
@@ -179,6 +184,8 @@ public class RocketMiner {
         }
         List<Map.Entry<String,Integer>> entryList = new ArrayList<>(stringIntegerMap.entrySet());
         List<Map.Entry<String,Integer>> entryList1 = entryList.stream().sorted((a,b)->-a.getValue()-b.getValue()).limit(1).collect(Collectors.toList());
+        if (entryList1.size() != 1)
+            throw new IllegalArgumentException("passed orbit not found");
         String country = entryList1.get(0).getKey();
         return country;
     }
@@ -194,6 +201,10 @@ public class RocketMiner {
     public List<Launch> mostExpensiveLaunches(int k) {
         logger.info("find most Expensive " + k + "Launches");
         Collection<Launch> launches = dao.loadAll(Launch.class);
+        if (launches == null)
+            throw new NullPointerException("no launches in database");
+        if (k>launches.size())
+            throw new IllegalArgumentException("k beyond the data boundary");
         Comparator<Launch> launchComparator = (a,b) -> -a.getPrice().compareTo(b.getPrice());
         List<Launch> launchList = launches.stream().sorted(launchComparator).limit(k).collect(Collectors.toList());
         return launchList;

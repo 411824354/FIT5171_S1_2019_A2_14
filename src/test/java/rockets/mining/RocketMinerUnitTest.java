@@ -227,10 +227,56 @@ public class RocketMinerUnitTest {
 
     @ParameterizedTest
     @ValueSource(ints = {11,15,5,9,10})
-    public void shouldThrowExceptionWHenNothingInMostRecentLaunches(int k)
+    public void shouldThrowExceptionWhenNothingLoadInMostRecentLaunches(int k)
     {
         when(dao.loadAll(Launch.class)).thenReturn(null);
         NullPointerException exception = assertThrows(NullPointerException.class, () -> miner.mostRecentLaunches(k));
+        assertEquals("no launches in database",exception.getMessage());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {""," ","  "})
+    public void ShouldThrowExceptionWhenPassEmptyOrbit(String orbit)
+    {
+        when(dao.loadAll(Launch.class)).thenReturn(launches);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> miner.dominantCountry(orbit));
+        assertEquals("orbit cannot be null or empty",exception.getMessage());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"LEO","aaaaa"})
+    public void shouldThrowExceptionWhenNothingLoadInDominantCountry(String orbit)
+    {
+        when(dao.loadAll(Launch.class)).thenReturn(null);
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> miner.dominantCountry(orbit));
+        assertEquals("no launches in database",exception.getMessage());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"aaa","bbb"})
+    public void shouldThrowExceptionWhenPassedOrbitNotExit(String orbit)
+    {
+        when(dao.loadAll(Launch.class)).thenReturn(launches);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> miner.dominantCountry(orbit));
+        assertEquals("passed orbit not found",exception.getMessage());
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {11,15})
+    public void boundaryTestKInMostExpensiveLaunches(int k)
+    {
+        when(dao.loadAll(Launch.class)).thenReturn(launches);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> miner.mostExpensiveLaunches(k));
+        assertEquals("k beyond the data boundary",exception.getMessage());
+
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {11,15,5,9,10})
+    public void shouldThrowExceptionWhenNothingLoadInMostExpensiveLaunches(int k)
+    {
+        when(dao.loadAll(Launch.class)).thenReturn(null);
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> miner.mostExpensiveLaunches(k));
         assertEquals("no launches in database",exception.getMessage());
     }
 }
