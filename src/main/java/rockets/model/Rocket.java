@@ -63,6 +63,15 @@ public class Rocket extends Entity {
         return massToOther;
     }
 
+    public boolean isNumber(String input){
+        for (int i = input.length();--i>=0;){
+            if (!Character.isDigit(input.charAt(i))){
+                return false;
+            }
+        }
+        return true;
+    }
+
     public void setMassToLEO(String massToLEO) throws Exception{
         notBlank(massToLEO, "massToLEO cannot be null or empty");
         massToLEO = massToLEO.replace(" ","");
@@ -81,7 +90,8 @@ public class Rocket extends Entity {
         massToGTO = massToGTO.replace(" ","");
         if (isNumber(massToGTO)) {
             this.massToGTO = massToGTO;
-        } else {
+        }
+        else {
 
             throw new Exception("massToGTO should only be digit");
         }
