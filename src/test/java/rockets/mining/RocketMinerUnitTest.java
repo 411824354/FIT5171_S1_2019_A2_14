@@ -119,7 +119,7 @@ public class RocketMinerUnitTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {1, 2, 3})
+    @ValueSource(ints = { 1, 2, 3})
     public void shouldReturnTopMostLaunchedRocket(int k){
         when(dao.loadAll(Launch.class)).thenReturn(launches);
         List<Rocket> rocketList = new ArrayList<>(rockets);
@@ -178,7 +178,7 @@ public class RocketMinerUnitTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {5,10})
+    @ValueSource(ints = {5,10,-1,-5})
     public void boundaryTestKInMostLaunchedRockets(int k)
     {
         when(dao.loadAll(Launch.class)).thenReturn(launches);
@@ -188,7 +188,7 @@ public class RocketMinerUnitTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {5,10,2,3,4})
+    @ValueSource(ints = {5,10,2,3,4,-1,-5})
     public void shouldThrowExceptionWHenNothingLoadInMostLaunchedRockets(int k)
     {
         when(dao.loadAll(Launch.class)).thenReturn(null);
@@ -197,7 +197,7 @@ public class RocketMinerUnitTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {4,10})
+    @ValueSource(ints = {4,10,-1,-5})
     public void boundaryTestKInMostReliableLaunchServiceProvider(int k)
     {
         when(dao.loadAll(Launch.class)).thenReturn(launches);
@@ -207,7 +207,7 @@ public class RocketMinerUnitTest {
 
 
     @ParameterizedTest
-    @ValueSource(ints = {4,10,1,2,3})
+    @ValueSource(ints = {4,10,1,2,3,-1,-5})
     public void shouldThrowExceptionWHenNothingLoadInMostReliableLaunchServiceProvider(int k)
     {
         when(dao.loadAll(Launch.class)).thenReturn(null);
@@ -216,7 +216,7 @@ public class RocketMinerUnitTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {11,15})
+    @ValueSource(ints = {11,15,-1,-5})
     public void boundaryTestKInMostRecentLaunches(int k)
     {
         when(dao.loadAll(Launch.class)).thenReturn(launches);
@@ -226,7 +226,7 @@ public class RocketMinerUnitTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {11,15,5,9,10})
+    @ValueSource(ints = {11,15,5,9,10,-1,-5})
     public void shouldThrowExceptionWhenNothingLoadInMostRecentLaunches(int k)
     {
         when(dao.loadAll(Launch.class)).thenReturn(null);
@@ -262,7 +262,7 @@ public class RocketMinerUnitTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {11,15})
+    @ValueSource(ints = {11,15,-1,-5})
     public void boundaryTestKInMostExpensiveLaunches(int k)
     {
         when(dao.loadAll(Launch.class)).thenReturn(launches);
@@ -272,7 +272,7 @@ public class RocketMinerUnitTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {11,15,5,9,10})
+    @ValueSource(ints = {11,15,5,9,10,-1,-5})
     public void shouldThrowExceptionWhenNothingLoadInMostExpensiveLaunches(int k)
     {
         when(dao.loadAll(Launch.class)).thenReturn(null);
@@ -281,7 +281,7 @@ public class RocketMinerUnitTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {4, 10})
+    @ValueSource(ints = {4, 10,-1,-5})
     public void boundaryTestKInHighestRevenueLaunchServiceProviders(int k)
     {
         when(dao.loadAll(Launch.class)).thenReturn(launches);
@@ -291,7 +291,7 @@ public class RocketMinerUnitTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {4,10,1,2,3})
+    @ValueSource(ints = {4,10,1,2,3,-1,-5})
     public void shouldThrowExceptionWhenNothingLoadInHighestRevenueLaunchServiceProviders(int k)
     {
         when(dao.loadAll(Launch.class)).thenReturn(null);

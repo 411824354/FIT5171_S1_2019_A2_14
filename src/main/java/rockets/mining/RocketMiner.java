@@ -49,7 +49,7 @@ public class RocketMiner {
             else
                 rocketMap.put(rocket,1);
         }
-        if (k>rocketMap.size())
+        if (k>rocketMap.size()|| k < 0)
             throw new IllegalArgumentException("k beyond the data boundary");
         ArrayList<Rocket> rockets1 = new ArrayList<>();
         Set<Map.Entry<Rocket,Integer>> rocketMap2 =
@@ -114,7 +114,7 @@ public class RocketMiner {
             reliable = Double.parseDouble(df.format(reliable1));
             launchServiceProviderDoubleMap.put(launchServiceProvider,reliable);
         }
-        if (k>launchServiceProviderDoubleMap.size())
+        if (k>launchServiceProviderDoubleMap.size()|| k < 0)
             throw new IllegalArgumentException("k beyond the data boundary");
         Comparator<Map.Entry<LaunchServiceProvider,Double>> entryComparator = new Comparator<Map.Entry<LaunchServiceProvider, Double>>() {
             @Override
@@ -148,7 +148,7 @@ public class RocketMiner {
         Collection<Launch> launches = dao.loadAll(Launch.class);
         if (launches == null)
             throw new NullPointerException("no launches in database");
-        if (k>launches.size())
+        if (k>launches.size()|| k < 0)
             throw new IllegalArgumentException("k beyond the data boundary");
         Comparator<Launch> launchDateComparator = (a, b) -> -a.getLaunchDate().compareTo(b.getLaunchDate());
         return launches.stream().sorted(launchDateComparator).limit(k).collect(Collectors.toList());
@@ -203,7 +203,7 @@ public class RocketMiner {
         Collection<Launch> launches = dao.loadAll(Launch.class);
         if (launches == null)
             throw new NullPointerException("no launches in database");
-        if (k>launches.size())
+        if (k>launches.size()|| k < 0)
             throw new IllegalArgumentException("k beyond the data boundary");
         Comparator<Launch> launchComparator = (a,b) -> -a.getPrice().compareTo(b.getPrice());
         List<Launch> launchList = launches.stream().sorted(launchComparator).limit(k).collect(Collectors.toList());
@@ -245,7 +245,7 @@ public class RocketMiner {
         }
         if (launchServiceProviderIntegerMap.size() == 0)
             throw new IllegalArgumentException("Launch service provide not found in this year");
-        if (k>launchServiceProviderIntegerMap.size())
+        if (k>launchServiceProviderIntegerMap.size()|| k < 0)
             throw new IllegalArgumentException("k beyond the data boundary");
         List<Map.Entry<LaunchServiceProvider,Integer>> entryList = new ArrayList<>(launchServiceProviderIntegerMap.entrySet());
         List<Map.Entry<LaunchServiceProvider,Integer>> entryList1 = entryList.stream().sorted((a,b) -> -a.getValue() - b.getValue()).limit(k).collect(Collectors.toList());
