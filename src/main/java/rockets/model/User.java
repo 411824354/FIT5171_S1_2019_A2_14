@@ -36,10 +36,14 @@ public class User extends Entity {
 
     public void setEmail(String email) {
         notBlank(email, "email cannot be null or empty");
-        if (!emailFormat(email)){
+        email = email.trim().replace(" ","");
+        if (!(emailFormat(email) && email.length() < 40)){
+
             throw new IllegalArgumentException("incorrect email format e.g:asdf@gmail.com");
+
         }
         else {
+
             this.email = email;
         }
     }
@@ -57,8 +61,35 @@ public class User extends Entity {
     }
 
     public void setPassword(String password) {
-        notBlank(email, "password cannot be null or empty");
-        this.password = password;
+        notBlank(password, "password cannot be null or empty");
+        if (passwordFormat(password)){
+            this.password = password;
+        }
+        else {
+            throw new IllegalArgumentException("incorrect password format");
+        }
+    }
+
+    public boolean passwordFormat(String str){
+        boolean isDigit = false;
+        boolean isLetter = false;
+        for (int i = 0; i < str.length(); i++)
+        {
+            if (str.charAt(i) == ' '){
+                return false;
+            }
+            if (Character.isDigit(str.charAt(i)))
+            {
+                isDigit = true;
+            } else if (Character.isLetter(str.charAt(i)))
+            {
+                isLetter = true;
+            }
+        }
+        String regex = "^[a-zA-Z0-9]{6,12}$";
+        boolean isRight = isDigit && isLetter && str.matches(regex);
+        return isRight;
+
     }
 
     // match the given password against user's password and return the result

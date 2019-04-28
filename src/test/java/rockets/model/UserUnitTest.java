@@ -70,10 +70,32 @@ public class UserUnitTest {
 
     @DisplayName("email should in correct format")
     @ParameterizedTest
-    @ValueSource(strings = {"sdfsf","abc@123","aabbcc@gmialcome"})
+    @ValueSource(strings = {"sdfsf","abc@123","aabbcc@gmialcome","piaogu1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111angxue@gmail.com"})
     public void emailShouldInCorrectFormat(String email){
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> target.setEmail(email));
         assertEquals("incorrect email format e.g:asdf@gmail.com",exception.getMessage());
+    }
+
+    @DisplayName("the password should involve letter and number and length in 6-12 and not involve blank")
+    @ParameterizedTest
+    @ValueSource(strings = {"sdfsf", "123 123","12123","12ee","11","aa","123  abcd"})
+    public void shouldInPasswordFormat(String lastName){
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> target.setPassword(lastName));
+        assertEquals("incorrect password format",exception.getMessage());
+    }
+
+    @DisplayName("correct password format test")
+    @Test
+    public void shouldAssignSuccessPassword(){
+        target.setPassword("123abcd");
+        assertEquals("123abcd",target.getPassword());
+    }
+
+    @DisplayName("correct email format test")
+    @Test
+    public void shouldAssignSuccessEmail(){
+        target.setEmail("tom123@gmail.com");
+        assertEquals("tom123@gmail.com",target.getEmail());
     }
 
 }
