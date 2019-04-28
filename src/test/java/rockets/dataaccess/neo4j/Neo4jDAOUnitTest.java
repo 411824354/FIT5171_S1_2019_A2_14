@@ -214,6 +214,14 @@ public class Neo4jDAOUnitTest {
     }
 
     @Test
+    public void shouldDeleteLaunchServiceProviderSuccessfully(){
+        dao.createOrUpdate(esa);
+        assertFalse(dao.loadAll(LaunchServiceProvider.class).isEmpty());
+        dao.delete(esa);
+        assertTrue(dao.loadAll(LaunchServiceProvider.class).isEmpty());
+    }
+
+    @Test
     public void shouldCreateARocketFamilySuccessfully() {
         RocketFamily rocketFamily = new RocketFamily("Falcon9", "USA", "SpaceX");
         dao.createOrUpdate(rocketFamily);
@@ -232,12 +240,21 @@ public class Neo4jDAOUnitTest {
     }
 
     @Test
-    public void shouldCreateAPayLoadSuccessfully() {
-        Payload payload = new Payload("name", "type");
+    public void shouldCreateAPayloadSuccessfully() {
+        Payload payload = new Payload("Payload", "v1.1");
         dao.createOrUpdate(payload);
         Collection<Payload> payloads = dao.loadAll(Payload.class);
         assertFalse(payloads.isEmpty());
         assertTrue(payloads.contains(payload));
+    }
+
+    @Test
+    public void shouldDeletePayloadSuccessfully(){
+        Payload payload = new Payload("Payload", "v1.1");
+        dao.createOrUpdate(payload);
+        assertFalse(dao.loadAll(Payload.class).isEmpty());
+        dao.delete(payload);
+        assertTrue(dao.loadAll(Payload.class).isEmpty());
     }
 
     @AfterEach
