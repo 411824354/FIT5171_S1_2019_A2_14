@@ -32,6 +32,8 @@ public class RocketMiner {
     public List<Rocket> mostLaunchedRockets(int k) {
         logger.info("find most launched" + k + "rockets");
         Collection<Launch> launches = dao.loadAll(Launch.class);
+        if (launches == null)
+            throw new NullPointerException("no launches in database");
         ArrayList<Rocket> rockets = new ArrayList<>();
         for (Launch launch : launches) {
             rockets.add(launch.getLaunchVehicle());
@@ -45,6 +47,8 @@ public class RocketMiner {
             else
                 rocketMap.put(rocket,1);
         }
+        if (k>rocketMap.size())
+            throw new IllegalArgumentException("k beyond the data boundary");
         ArrayList<Rocket> rockets1 = new ArrayList<>();
         Set<Map.Entry<Rocket,Integer>> rocketMap2 =
                 rocketMap.entrySet().stream().sorted(Map.Entry.<Rocket,Integer>comparingByValue().reversed()).limit(k).collect(Collectors.toSet());
@@ -66,6 +70,8 @@ public class RocketMiner {
     public List<LaunchServiceProvider> mostReliableLaunchServiceProviders(int k) {
         logger.info("find most reliable " + k + " launch services providers");
         Collection<Launch> launches = dao.loadAll(Launch.class);
+        if (launches == null)
+            throw new NullPointerException("no launches in database");
         List<Launch> launches1 = launches.stream().collect(Collectors.toList());
         ArrayList<LaunchServiceProvider> launchServiceProviders = new ArrayList<>();
         Map<LaunchServiceProvider,Double> launchServiceProviderDoubleMap = new HashMap<>();
@@ -106,6 +112,8 @@ public class RocketMiner {
             reliable = Double.parseDouble(df.format(reliable1));
             launchServiceProviderDoubleMap.put(launchServiceProvider,reliable);
         }
+        if (k>launchServiceProviderDoubleMap.size())
+            throw new IllegalArgumentException("k beyond the data boundary");
         Comparator<Map.Entry<LaunchServiceProvider,Double>> entryComparator = new Comparator<Map.Entry<LaunchServiceProvider, Double>>() {
             @Override
             public int compare(Map.Entry<LaunchServiceProvider, Double> o1, Map.Entry<LaunchServiceProvider, Double> o2) {

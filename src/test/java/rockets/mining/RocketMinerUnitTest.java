@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class RocketMinerUnitTest {
@@ -174,5 +175,54 @@ public class RocketMinerUnitTest {
         String realCountry = "CHINA";
         String testCountry = miner.dominantCountry("LEO");
         assertEquals(realCountry,testCountry);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {4,10,1,2,3})
+    public void boundaryTestKInMostLaunchedRockets(int k)
+    {
+        when(dao.loadAll(Launch.class)).thenReturn(launches);
+        if (k > 4) {
+            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> miner.mostLaunchedRockets(k));
+            assertEquals("k beyond the data boundary",exception.getMessage());
+        }
+        else {
+            List<Rocket> launchList = miner.mostLaunchedRockets(k);
+            assertEquals(k,launchList.size());
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {4,10,1,2,3})
+    public void shouldThrowExceptionWHenNothingLoadInMostLaunchedRockets(int k)
+    {
+        when(dao.loadAll(Launch.class)).thenReturn(null);
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> miner.mostLaunchedRockets(k));
+        assertEquals("no launches in database",exception.getMessage());
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {4,10,1,2,3})
+    public void boundaryTestKInMostReliableLaunchServiceProvider(int k)
+    {
+        when(dao.loadAll(Launch.class)).thenReturn(launches);
+        if (k > lsps.size()) {
+            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> miner.mostReliableLaunchServiceProviders(k));
+            assertEquals("k beyond the data boundary",exception.getMessage());
+        }
+        else {
+            List<LaunchServiceProvider> launchList = miner.mostReliableLaunchServiceProviders(k);
+            assertEquals(k,launchList.size());
+        }
+    }
+
+
+    @ParameterizedTest
+    @ValueSource(ints = {4,10,1,2,3})
+    public void shouldThrowExceptionWHenNothingLoadInMostReliableLaunchServiceProvider(int k)
+    {
+        when(dao.loadAll(Launch.class)).thenReturn(null);
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> miner.mostReliableLaunchServiceProviders(k));
+        assertEquals("no launches in database",exception.getMessage());
     }
 }
