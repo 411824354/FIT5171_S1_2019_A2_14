@@ -153,6 +153,23 @@ public class Neo4jDAOUnitTest {
     }
 
     @Test
+    public void shouldLoadAllLaunches() {
+        Set<Launch> launches = Sets.newHashSet(
+
+        );
+
+        for (Launch l : launches) {
+            dao.createOrUpdate(l);
+        }
+
+        Collection<Launch> loadedLaunches = dao.loadAll(Launch.class);
+        assertEquals(launches.size(), loadedLaunches.size());
+        for (Launch l : launches) {
+            assertTrue(launches.contains(l));
+        }
+    }
+
+    @Test
     public void shouldDeleteRocketWithoutDeleteLSP() {
         dao.createOrUpdate(rocket);
         assertNotNull(rocket.getId());
@@ -214,6 +231,23 @@ public class Neo4jDAOUnitTest {
     }
 
     @Test
+    public void shouldLoadAllLSP() {
+        Set<LaunchServiceProvider> lsp = Sets.newHashSet(
+                esa, spacex
+        );
+
+        for (LaunchServiceProvider l : lsp) {
+            dao.createOrUpdate(l);
+        }
+
+        Collection<LaunchServiceProvider> loadedLSP = dao.loadAll(LaunchServiceProvider.class);
+        assertEquals(lsp.size(), loadedLSP.size());
+        for (LaunchServiceProvider l : lsp) {
+            assertTrue(lsp.contains(l));
+        }
+    }
+
+    @Test
     public void shouldDeleteLaunchServiceProviderSuccessfully(){
         dao.createOrUpdate(esa);
         assertFalse(dao.loadAll(LaunchServiceProvider.class).isEmpty());
@@ -225,9 +259,9 @@ public class Neo4jDAOUnitTest {
     public void shouldCreateARocketFamilySuccessfully() {
         RocketFamily rocketFamily = new RocketFamily("Falcon9", "USA", "SpaceX");
         dao.createOrUpdate(rocketFamily);
-        Collection<RocketFamily> rocketFamilys = dao.loadAll(RocketFamily.class);
-        assertFalse(rocketFamilys.isEmpty());
-        assertTrue(rocketFamilys.contains(rocketFamily));
+        Collection<RocketFamily> rocketFamilies = dao.loadAll(RocketFamily.class);
+        assertFalse(rocketFamilies.isEmpty());
+        assertTrue(rocketFamilies.contains(rocketFamily));
     }
 
     @Test
@@ -244,6 +278,24 @@ public class Neo4jDAOUnitTest {
         dao.createOrUpdate(rocketFamily);
         graphRocketFamily = dao.load(RocketFamily.class, rocketFamily.getId());
         assertEquals(newLink, graphRocketFamily.getWikilink());
+    }
+
+    @Test
+    public void shouldLoadAllRocketFamilies() {
+        Set<RocketFamily> rocketFamilies = Sets.newHashSet(
+                new RocketFamily("Falcon9", "USA", "SpaceX"),
+                new RocketFamily("RocketFamily", "Europe", "ESA")
+        );
+
+        for (RocketFamily r : rocketFamilies) {
+            dao.createOrUpdate(r);
+        }
+
+        Collection<RocketFamily> loadedRocketFamilies = dao.loadAll(RocketFamily.class);
+        assertEquals(rocketFamilies.size(), loadedRocketFamilies.size());
+        for (RocketFamily r : rocketFamilies) {
+            assertTrue(rocketFamilies.contains(r));
+        }
     }
 
     @Test
@@ -283,6 +335,24 @@ public class Neo4jDAOUnitTest {
         loadedPayload = payloads.iterator().next();
         assertEquals("to LEO", loadedPayload.getMission());
         assertEquals("13150", loadedPayload.getMass());
+    }
+
+    @Test
+    public void shouldLoadAllPayloads() {
+        Set<Payload> payloads = Sets.newHashSet(
+                new Payload("Falcon Payload", "v1.0"),
+                new Payload("Falcon Payload", "v1.1")
+        );
+
+        for (Payload p : payloads) {
+            dao.createOrUpdate(p);
+        }
+
+        Collection<Payload> loadedPayloads = dao.loadAll(Payload.class);
+        assertEquals(payloads.size(), loadedPayloads.size());
+        for (Payload p : payloads) {
+            assertTrue(payloads.contains(p));
+        }
     }
 
     @Test
