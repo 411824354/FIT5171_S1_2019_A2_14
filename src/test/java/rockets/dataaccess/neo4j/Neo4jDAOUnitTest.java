@@ -143,19 +143,38 @@ public class Neo4jDAOUnitTest {
 
         Launch loadedLaunch = launches.iterator().next();
         assertNull(loadedLaunch.getFunction());
+        assertNull(loadedLaunch.getLaunchServiceProvider());
 
         launch.setFunction("experimental");
+        launch.setLaunchServiceProvider(spacex);
         dao.createOrUpdate(launch);
         launches = dao.loadAll(Launch.class);
         assertEquals(1, launches.size());
         loadedLaunch = launches.iterator().next();
         assertEquals("experimental", loadedLaunch.getFunction());
+        assertEquals(spacex, loadedLaunch.getLaunchServiceProvider());
     }
 
     @Test
     public void shouldLoadAllLaunches() {
-        Set<Launch> launches = Sets.newHashSet(
+        LocalDate date = LocalDate.of(2019, 3, 17);
+        LaunchServiceProvider serviceProvider = new LaunchServiceProvider("China National Space Administration", 1920, "China");
+        Rocket vehicle = new Rocket("300th Long March", "China",serviceProvider);
+        String orbit = "low earth orbit";
+        Launch firstLaunch = new Launch();
+        firstLaunch.setLaunchDate(date);
+        firstLaunch.setLaunchVehicle(vehicle);
+        firstLaunch.setLaunchServiceProvider(serviceProvider);
+        firstLaunch.setOrbit(orbit);
 
+        LocalDate date2 = LocalDate.of(2017, 1, 1);
+        Launch secondLaunch = new Launch();
+        secondLaunch.setLaunchDate(date);
+        secondLaunch.setLaunchVehicle(rocket);
+        secondLaunch.setLaunchServiceProvider(spacex);
+        secondLaunch.setOrbit("LEO");
+        Set<Launch> launches = Sets.newHashSet(
+            firstLaunch, secondLaunch
         );
 
         for (Launch l : launches) {
