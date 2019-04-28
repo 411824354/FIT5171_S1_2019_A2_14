@@ -279,4 +279,32 @@ public class RocketMinerUnitTest {
         NullPointerException exception = assertThrows(NullPointerException.class, () -> miner.mostExpensiveLaunches(k));
         assertEquals("no launches in database",exception.getMessage());
     }
+
+    @ParameterizedTest
+    @ValueSource(ints = {4, 10})
+    public void boundaryTestKInHighestRevenueLaunchServiceProviders(int k)
+    {
+        when(dao.loadAll(Launch.class)).thenReturn(launches);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> miner.highestRevenueLaunchServiceProviders(k,2017));
+        assertEquals("k beyond the data boundary",exception.getMessage());
+
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {4,10,1,2,3})
+    public void shouldThrowExceptionWhenNothingLoadInHighestRevenueLaunchServiceProviders(int k)
+    {
+        when(dao.loadAll(Launch.class)).thenReturn(null);
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> miner.highestRevenueLaunchServiceProviders(k,2017));
+        assertEquals("no launches in database",exception.getMessage());
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {2016,2018,1999})
+    public void shouldThrowExceptionWhenNoProviderInThisYearInHighestRevenueLaunchServiceProviders(int year)
+    {
+        when(dao.loadAll(Launch.class)).thenReturn(launches);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> miner.highestRevenueLaunchServiceProviders(3,year));
+        assertEquals("Launch service provide not found in this year",exception.getMessage());
+    }
 }

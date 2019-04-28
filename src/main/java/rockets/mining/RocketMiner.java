@@ -223,6 +223,8 @@ public class RocketMiner {
     public List<LaunchServiceProvider> highestRevenueLaunchServiceProviders(int k, int year) {
         logger.info("find highest Revenue " + k + " launch service providers");
         Collection<Launch> launches = dao.loadAll(Launch.class);
+        if (launches == null)
+            throw new NullPointerException("no launches in database");
         List<LaunchServiceProvider> launchServiceProviderList = new ArrayList<>();
         Map<LaunchServiceProvider,Integer> launchServiceProviderIntegerMap = new HashMap<>();
         for (Launch launch : launches)
@@ -241,6 +243,10 @@ public class RocketMiner {
                 }
             }
         }
+        if (launchServiceProviderIntegerMap.size() == 0)
+            throw new IllegalArgumentException("Launch service provide not found in this year");
+        if (k>launchServiceProviderIntegerMap.size())
+            throw new IllegalArgumentException("k beyond the data boundary");
         List<Map.Entry<LaunchServiceProvider,Integer>> entryList = new ArrayList<>(launchServiceProviderIntegerMap.entrySet());
         List<Map.Entry<LaunchServiceProvider,Integer>> entryList1 = entryList.stream().sorted((a,b) -> -a.getValue() - b.getValue()).limit(k).collect(Collectors.toList());
         for (Map.Entry<LaunchServiceProvider,Integer> map : entryList1)
