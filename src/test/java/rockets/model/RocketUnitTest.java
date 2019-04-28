@@ -126,13 +126,13 @@ public class RocketUnitTest {
 
     }
 
-    @DisplayName("should throw exception when pass a not digit input to massToGTO value to setMassToLEO function")
-    @ParameterizedTest
-    @ValueSource(strings = {"sss","///**","测试"})
-    public void shouldTrowExceptionWhenPassNonDigitInputToSetMassToGTO(String mass){
-        Exception exception = assertThrows(Exception.class, () -> target.setMassToGTO(mass));
-        assertEquals("massToGTO should only be digit",exception.getMessage());
-    }
+    //@DisplayName("should throw exception when pass a not digit input to massToGTO value to setMassToLEO function")
+    //@ParameterizedTest
+    //@ValueSource(strings = {"sss","///**","测试"})
+    //public void shouldTrowExceptionWhenPassNonDigitInputToSetMassToGTO(String mass){
+    //    Exception exception = assertThrows(Exception.class, () -> target.setMassToGTO(mass));
+    //    assertEquals("massToGTO should only be digit",exception.getMessage());
+    //}
 
     @DisplayName("should success assignment the value which involve the blank to massToGTO")
     @ParameterizedTest
@@ -160,13 +160,13 @@ public class RocketUnitTest {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> target.setMassToOther(mass));
         assertEquals("massToOther cannot be null or empty", exception.getMessage());
     }
-    @DisplayName("should throw exception when pass a not digit input to massToOther value to setMassToLEO function")
-    @ParameterizedTest
-    @ValueSource(strings = {"sss","///**","测试","12#df"})
-    public void shouldTrowExceptionWhenPassNonDigitInputToSetMassToOther(String mass){
-        Exception exception = assertThrows(Exception.class, () -> target.setMassToOther(mass));
-        assertEquals("massToOther should only be digit",exception.getMessage());
-    }
+   // @DisplayName("should throw exception when pass a not digit input to massToOther value to setMassToLEO function")
+    //@ParameterizedTest
+    //@ValueSource(strings = {"sss","///**","测试","12#df"})
+   // public void shouldTrowExceptionWhenPassNonDigitInputToSetMassToOther(String mass){
+   //     Exception exception = assertThrows(Exception.class, () -> target.setMassToOther(mass));
+   //     assertEquals("massToOther should only be digit",exception.getMessage());
+  //  }
 
     @DisplayName("should success assignment the value which involve the blank to massToOther")
     @ParameterizedTest
