@@ -273,13 +273,16 @@ public class Neo4jDAOUnitTest {
 
         Payload loadedPayload = payloads.iterator().next();
         assertNull(loadedPayload.getMission());
+        assertNull(loadedPayload.getMass());
 
-        payload.setMission("Mars");
+        payload.setMission("to LEO");
+        payload.setMass("13150");
         dao.createOrUpdate(payload);
         payloads = dao.loadAll(Payload.class);
         assertEquals(1, payloads.size());
         loadedPayload = payloads.iterator().next();
-        assertEquals("Mars", loadedPayload.getMission());
+        assertEquals("to LEO", loadedPayload.getMission());
+        assertEquals("13150", loadedPayload.getMass());
     }
 
     @Test
