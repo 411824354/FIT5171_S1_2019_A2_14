@@ -5,14 +5,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.harness.ServerControls;
+import org.neo4j.harness.TestServerBuilders;
+import org.neo4j.ogm.drivers.embedded.driver.EmbeddedDriver;
+import org.neo4j.ogm.session.Session;
+import org.neo4j.ogm.session.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rockets.dataaccess.DAO;
 import rockets.dataaccess.neo4j.Neo4jDAO;
-import rockets.model.Launch;
-import rockets.model.LaunchServiceProvider;
-import rockets.model.Payload;
-import rockets.model.Rocket;
+import rockets.model.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -306,5 +309,33 @@ public class RocketMinerUnitTest {
         when(dao.loadAll(Launch.class)).thenReturn(launches);
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> miner.highestRevenueLaunchServiceProviders(3,year));
         assertEquals("Launch service provide not found in this year",exception.getMessage());
+    }
+
+    public Session integrationSetUp()
+    {
+        ServerControls embeddedDatabaseServer = TestServerBuilders.newInProcessBuilder().newServer();
+        GraphDatabaseService dbService = embeddedDatabaseServer.graph();
+        EmbeddedDriver driver = new EmbeddedDriver(dbService);
+        SessionFactory sessionFactory = new SessionFactory(driver, User.class.getPackage().getName());
+        Session session = sessionFactory.openSession();
+        dao = new Neo4jDAO(session);
+        return session;
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2, 3, 9})
+    public void mostLaunchedRocketsIntegrationTest(int k)
+    {
+        Session session = integrationSetUp();
+        dao = new Neo4jDAO(session);
+        for (Launch launch : launches) {
+            dao.createOrUpdate(launch);
+        }
+        miner = new RocketMiner(dao);
+        List<Launch> sortedLaunches = new ArrayList<>(launches);
+        sortedLaunches.sort((a, b) -> -a.getLaunchDate().compareTo(b.getLaunchDate()));
+        List<Launch> loadedLaunches = miner.mostRecentLaunches(k);
+        assertEquals(k, loadedLaunches.size());
+        assertEquals(sortedLaunches.subList(0, k), loadedLaunches);
     }
 }
