@@ -144,6 +144,10 @@ public class RocketMiner {
     public List<Launch> mostRecentLaunches(int k) {
         logger.info("find most recent " + k + " launches");
         Collection<Launch> launches = dao.loadAll(Launch.class);
+        if (launches == null)
+            throw new NullPointerException("no launches in database");
+        if (k>launches.size())
+            throw new IllegalArgumentException("k beyond the data boundary");
         Comparator<Launch> launchDateComparator = (a, b) -> -a.getLaunchDate().compareTo(b.getLaunchDate());
         return launches.stream().sorted(launchDateComparator).limit(k).collect(Collectors.toList());
     }

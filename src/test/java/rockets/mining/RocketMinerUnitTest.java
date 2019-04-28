@@ -178,18 +178,13 @@ public class RocketMinerUnitTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {4,10,1,2,3})
+    @ValueSource(ints = {5,10})
     public void boundaryTestKInMostLaunchedRockets(int k)
     {
         when(dao.loadAll(Launch.class)).thenReturn(launches);
-        if (k > 4) {
-            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> miner.mostLaunchedRockets(k));
-            assertEquals("k beyond the data boundary",exception.getMessage());
-        }
-        else {
-            List<Rocket> launchList = miner.mostLaunchedRockets(k);
-            assertEquals(k,launchList.size());
-        }
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> miner.mostLaunchedRockets(k));
+        assertEquals("k beyond the data boundary",exception.getMessage());
+
     }
 
     @ParameterizedTest
@@ -202,27 +197,40 @@ public class RocketMinerUnitTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {4,10,1,2,3})
+    @ValueSource(ints = {4,10})
     public void boundaryTestKInMostReliableLaunchServiceProvider(int k)
     {
         when(dao.loadAll(Launch.class)).thenReturn(launches);
-        if (k > lsps.size()) {
-            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> miner.mostReliableLaunchServiceProviders(k));
-            assertEquals("k beyond the data boundary",exception.getMessage());
-        }
-        else {
-            List<LaunchServiceProvider> launchList = miner.mostReliableLaunchServiceProviders(k);
-            assertEquals(k,launchList.size());
-        }
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> miner.mostReliableLaunchServiceProviders(k));
+        assertEquals("k beyond the data boundary",exception.getMessage());
     }
 
 
     @ParameterizedTest
-    @ValueSource(ints = {4,10,1,2,3})
+    @ValueSource(ints = {11,15,5,9,10})
     public void shouldThrowExceptionWHenNothingLoadInMostReliableLaunchServiceProvider(int k)
     {
         when(dao.loadAll(Launch.class)).thenReturn(null);
         NullPointerException exception = assertThrows(NullPointerException.class, () -> miner.mostReliableLaunchServiceProviders(k));
+        assertEquals("no launches in database",exception.getMessage());
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {11,15})
+    public void boundaryTestKInMostRecentLaunches(int k)
+    {
+        when(dao.loadAll(Launch.class)).thenReturn(launches);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> miner.mostRecentLaunches(k));
+        assertEquals("k beyond the data boundary",exception.getMessage());
+
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {11,15,5,9,10})
+    public void shouldThrowExceptionWHenNothingInMostRecentLaunches(int k)
+    {
+        when(dao.loadAll(Launch.class)).thenReturn(null);
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> miner.mostRecentLaunches(k));
         assertEquals("no launches in database",exception.getMessage());
     }
 }
