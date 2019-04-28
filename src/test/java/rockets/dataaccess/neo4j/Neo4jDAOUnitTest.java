@@ -205,12 +205,12 @@ public class Neo4jDAOUnitTest {
         LaunchServiceProvider loadedLSP = lsp.iterator().next();
         assertNull(loadedLSP.getHeadquarters());
 
-        launchServiceProvider.setHeadquarters("experimental");
+        launchServiceProvider.setHeadquarters("SpaceX USA");
         dao.createOrUpdate(launchServiceProvider);
         lsp = dao.loadAll(LaunchServiceProvider.class);
         assertEquals(1, lsp.size());
         loadedLSP = lsp.iterator().next();
-        assertEquals("experimental", loadedLSP.getHeadquarters());
+        assertEquals("SpaceX USA", loadedLSP.getHeadquarters());
     }
 
     @Test
@@ -231,6 +231,22 @@ public class Neo4jDAOUnitTest {
     }
 
     @Test
+    public void shouldUpdateRocketFamilyAttributesSuccessfully() {
+        RocketFamily rocketFamily = new RocketFamily("Falcon9", "USA", "SpaceX");
+        rocketFamily.setWikilink("https://rocketfamilytest.com");
+
+        RocketFamily graphRocketFamily = dao.createOrUpdate(rocketFamily);
+        assertNotNull(graphRocketFamily.getId());
+        assertEquals(rocketFamily, graphRocketFamily);
+
+        String newLink = "https://anotherrocketfamilytest.com";
+        rocketFamily.setWikilink(newLink);
+        dao.createOrUpdate(rocketFamily);
+        graphRocketFamily = dao.load(RocketFamily.class, rocketFamily.getId());
+        assertEquals(newLink, graphRocketFamily.getWikilink());
+    }
+
+    @Test
     public void shouldDeleteRocketFamilySuccessfully(){
         RocketFamily rocketFamily = new RocketFamily("Falcon9", "USA", "SpaceX");
         dao.createOrUpdate(rocketFamily);
@@ -246,6 +262,24 @@ public class Neo4jDAOUnitTest {
         Collection<Payload> payloads = dao.loadAll(Payload.class);
         assertFalse(payloads.isEmpty());
         assertTrue(payloads.contains(payload));
+    }
+
+    @Test
+    public void shouldUpdatePayloadAttributesSuccessfully() {
+        Payload payload = new Payload("Payload", "v1.1");
+        dao.createOrUpdate(payload);
+
+        Collection<Payload> payloads = dao.loadAll(Payload.class);
+
+        Payload loadedPayload = payloads.iterator().next();
+        assertNull(loadedPayload.getMission());
+
+        payload.setMission("Mars");
+        dao.createOrUpdate(payload);
+        payloads = dao.loadAll(Payload.class);
+        assertEquals(1, payloads.size());
+        loadedPayload = payloads.iterator().next();
+        assertEquals("Mars", loadedPayload.getMission());
     }
 
     @Test
