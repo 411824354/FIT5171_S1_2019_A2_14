@@ -39,6 +39,7 @@ public class UserUnitTest {
         assertEquals("password cannot be null or empty", exception.getMessage());
     }
 
+    //
     @DisplayName("should return true when two users have the same email")
     @Test
     public void shouldReturnTrueWhenUsersHaveSameEmail() {
